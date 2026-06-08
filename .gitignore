@@ -1,0 +1,8 @@
+# Data
+src/data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
