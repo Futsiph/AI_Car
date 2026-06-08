@@ -13,4 +13,4 @@ Development of an autonomous car using AI.
 **08-06-2026**:
 - **Project Initialization** - Created the basic project structure.
 - **Environment Setup** - Configured the project and added `.gitignore` to exclude large data files and IDE-specific configurations.
-- **Data Collection** - Gathered initial video and image datasets for training.
+- **Data Collection** - Gathered initial video, image and capture image from video for training.
