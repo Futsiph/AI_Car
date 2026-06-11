@@ -21,3 +21,6 @@ Autonomous car development using Artificial Intelligence.
 
 ### 2026-06-10
 - **Path Detection**: Investigating automated path detection methods; planning manual labeling if automation proves insufficient.
+
+### 2026-06-11
+- **Path Detection**: The Canny method doesn't work because of light reflections. I need to try recording manual driving with an input logger and then retry the Canny method on that data. If it doesn't work, I will need to manually label every frame.
