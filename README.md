@@ -27,3 +27,15 @@ Autonomous car development using Artificial Intelligence.
 
 ### 2026-06-12
 - **Learn**: I learned some basics of mechatronics and read the Arduino documentation.
+
+### 2026-06-15
+- **Data Collection & Labeling**: Filmed all potential road objects and converted footage to still images. Started labeling (150/800).
+
+### 2026-06-16
+- **Labeling**: Completed labeling the remaining images for the dataset.
+- **Model Training**: Trained a YOLO model to recognize specific objects. Note: Barriers and people are not yet recognized consistently, requiring further training.
+- **Dataset Expansion**: Created 320 new images for the dataset.
+
+### 2026-06-18
+- **Labeling & Training**: Labeled the 320 new images. Trained the model to recognize humans.
+- **Route Tracking**: Started working on route tracking logic.
