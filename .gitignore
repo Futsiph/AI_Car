@@ -6,3 +6,9 @@ data/
 .vscode/
 *.swp
 *.swo
+
+# Arduino
+arduino/
+
+# Training runs
+runs/
