@@ -19,6 +19,7 @@ def extract_image(video_path, output_dir, frame_interval):
             cv2.imwrite(output_path, frame)
         count += 1
     capture.release()
+    print("End")
 
 
 class Preprocess:
@@ -32,4 +33,10 @@ class Preprocess:
         return post_image
 
 if __name__ == "__main__":
-    extract_image("C:/Users/futsi/Desktop/AI_Car/src/data/Video camera Νέα Πίστα Αυτοκινούμενων Οχημάτων/tcarn1.mp4","C:/Users/futsi/Desktop/AI_Car/src/data/output",10)
+    videos = []
+
+    for v_path, out_dir in videos:
+        if os.path.exists(v_path):
+            extract_image(v_path, out_dir, 10)
+        else:
+            print(f"no file found : {os.path.abspath(v_path)}")
