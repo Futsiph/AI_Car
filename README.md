@@ -39,3 +39,16 @@ Autonomous car development using Artificial Intelligence.
 ### 2026-06-18
 - **Labeling & Training**: Labeled the 320 new images. Trained the model to recognize humans.
 - **Route Tracking**: Started working on route tracking logic.
+
+### 2026-06-19
+- **Lane Tracking**: Working on lane tracking.
+
+### 2026-06-22
+- **Decision System**: Created a flowchart about the decision system.
+- **Lane Tracking**: Working on lane tracking.
+
+### 2026-06-23
+- **Lane Tracking & Object Recognition**: Working on lane tracking with object recognition at the time. I had to retrain the model because it mistook the road for a traffic light or a barrier.
+
+### 2026-06-24
+- **Model Debugging**: The model is still sometimes mistaking the road for an obstacle.
