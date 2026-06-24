@@ -1,6 +1,9 @@
 # Data
 data/
 
+# Lane tracking
+lane/
+
 # IDE
 .idea/
 .vscode/
