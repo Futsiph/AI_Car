@@ -3,16 +3,16 @@ import numpy as np
 import threading
 from ultralytics import YOLO
 
-model = YOLO("../models/best.pt")
+model = YOLO("../runs/detect/circuit_object-13/weights/best.pt")
 model.to('cuda')
-source = "../data/Video Πίστας Κτίριο Ζ 1ος όροφος - Περικλής Ντάφος/2025-01-08 10-25-09.mkv"
+source = "../data/test3.mp4"
 IMAGE_HEIGHT, IMAGE_WIDTH = 0, 0
 
 #Crop if needed
-crop_top = 120
-crop_bottom = 50
-crop_left = 155
-crop_rigth = 170
+crop_top = 0#120
+crop_bottom = 0#50
+crop_left = 0#155
+crop_rigth = 0#170
 
 max_screen_width = 1024
 max_screen_height = 576
@@ -27,9 +27,11 @@ def line_detection(frame):
     global shared_lines
     
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    minVal = 100
-    maxVal = 200
-    edges = cv2.Canny(gray, minVal, maxVal)
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    _, white = cv2.threshold(blur, 140, 255, cv2.THRESH_BINARY)
+    minVal = 150
+    maxVal = 400
+    edges = cv2.Canny(white, minVal, maxVal)
 
     top_x, top_y = 0, 0
     end_x, end_y = IMAGE_WIDTH, IMAGE_HEIGHT // 2
@@ -37,9 +39,9 @@ def line_detection(frame):
     
     rho = 1
     theta = np.pi / 180
-    threshold = 5
+    threshold = 15
     minLineLength = 40
-    maxLineGap = 60
+    maxLineGap = 30
     
     lines = cv2.HoughLinesP(edges, rho, theta, threshold, None, minLineLength, maxLineGap)
     
@@ -63,7 +65,7 @@ def main():
     if not cap.isOpened():
         print(f"Error: {video_source}")
         cap = cv2.VideoCapture(0)
-    print("Press 'ESC' to exit")
+    print("Press 'ESC' to exit or 'SPACE' to toggle pause/resume")
 
     ret, first_frame = cap.read()
     if not ret: return
@@ -76,40 +78,45 @@ def main():
     IMAGE_WIDTH = int(final_w * scale)
     IMAGE_HEIGHT = int(final_h * scale)
 
+    paused = False
     while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            break
-        frame = frame[crop_top:h-crop_bottom, crop_left:w-crop_rigth]
-        frame = cv2.resize(frame, (IMAGE_WIDTH, IMAGE_HEIGHT))
+        if not paused:
+            ret, frame = cap.read()
+            if not ret:
+                break
+            frame = frame[crop_top:h-crop_bottom, crop_left:w-crop_rigth]
+            frame = cv2.resize(frame, (IMAGE_WIDTH, IMAGE_HEIGHT))
 
-        # Create threading
-        if t_lines is None or not t_lines.is_alive():
-            t_lines = threading.Thread(target=line_detection, args=(frame.copy(),))
-            t_lines.start()
+            # Create threading
+            if t_lines is None or not t_lines.is_alive():
+                t_lines = threading.Thread(target=line_detection, args=(frame.copy(),))
+                t_lines.start()
 
-        if t_yolo is None or not t_yolo.is_alive():
-            t_yolo = threading.Thread(target=yolo_inference, args=(frame.copy(),))
-            t_yolo.start()
+            if t_yolo is None or not t_yolo.is_alive():
+                t_yolo = threading.Thread(target=yolo_inference, args=(frame.copy(),))
+                t_yolo.start()
 
-        with lock:
-            current_lines = shared_lines
-            current_detections = shared_detections
+            with lock:
+                current_lines = shared_lines
+                current_detections = shared_detections
 
-        if current_detections is not None:
-            for r in current_detections:
-                annotated_frame = r.plot()
-                frame = annotated_frame
+            if current_detections is not None:
+                for r in current_detections:
+                    annotated_frame = r.plot()
+                    frame = annotated_frame
 
-        if current_lines is not None:
-            for line in current_lines:
-                for x1, y1, x2, y2 in line:
-                    cv2.line(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            if current_lines is not None:
+                for line in current_lines:
+                    for x1, y1, x2, y2 in line:
+                        cv2.line(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
         cv2.imshow("Lane Follower", frame)
 
-        if cv2.waitKey(1) == 27:
+        key = cv2.waitKey(1) & 0xFF
+        if key == 27: # ESC
             break
+        elif key == ord(' '): # Space to pause/resume
+            paused = not paused
 
     cap.release()
     cv2.destroyAllWindows()
