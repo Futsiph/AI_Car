@@ -1,8 +1,17 @@
 # Data
-src/data/
+data/
+
+# Lane tracking
+lane/
 
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
+
+# Arduino
+arduino/
+
+# Training runs
+runs/
